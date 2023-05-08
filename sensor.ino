@@ -22,7 +22,7 @@ void RfidInit(void)
   if (!(nfc.getFirmwareVersion()))
   {
     Serial.print("!!!RFID 연결실패!!!");
-    has2wifi.Send((String)(const char*)my["device_name"], "device_state", "PN532");
+    has2wifi.Send((String)(const char *)my["device_name"], "device_state", "PN532");
   }
   else
   {
@@ -36,8 +36,15 @@ void RfidInit(void)
  */
 void RfidLoop()
 {
-  if (!rfid_tag){ rfid_tag = true; rfid_timer_id = rfid_timer.setTimeout(1000, RfidTagTimerFunc); }
-  else{ return; }
+  if (!rfid_tag)
+  {
+    rfid_tag = true;
+    rfid_timer_id = rfid_timer.setTimeout(1000, RfidTagTimerFunc);
+  }
+  else
+  {
+    return;
+  }
   uint8_t uid[] = {0, 0, 0, 0, 0, 0, 0}; // Buffer to store the returned UID
   uint8_t uidLength;                     // Length of the UID (4 or 7 bytes depending on ISO14443A card type)
   uint8_t data[32];
@@ -71,7 +78,8 @@ void CardChecking(uint8_t rfidData[32]) // 어떤 카드가 들어왔는지 확�
   has2wifi.Receive(tagUser);
 
   // 2. 술래인지, 플레이어인지 구분
-  if ((String)(const char *)my["game_state"] == "activate"  && (String)(const char *)my["device_state"] == "blink" && (String)(const char *)tag["role"] == "tagger" && (String)(const char *)tag["device_state"] == "blink"){
+  if ((String)(const char *)my["game_state"] == "activate" && (String)(const char *)my["device_state"] == "blink" && (String)(const char *)tag["role"] == "tagger" && (String)(const char *)tag["device_state"] == "blink")
+  {
     NeoFunc = NeoNo;
 
     pixels_round.clear();
@@ -89,7 +97,7 @@ void CardChecking(uint8_t rfidData[32]) // 어떤 카드가 들어왔는지 확�
     pixels_round.lightColor(purple);
     pixels_side.lightColor(purple);
     pixels_square.lightColor(purple);
-    
+
     has2wifi.Send((String)(const char *)my["device_name"], "device_state", "activate");
     has2wifi.Send((String)(const char *)tag["device_name"], "device_state", "activate");
 
@@ -104,32 +112,34 @@ void CardChecking(uint8_t rfidData[32]) // 어떤 카드가 들어왔는지 확�
     }
   }
 
-  if((String)(const char *)tag["role"] == "tagger" && (int)tag["taken_chip"] > 0)
+  if ((String)(const char *)tag["role"] == "tagger" && (int)tag["taken_chip"] > 0)
   {
     // if(RfidNsecTag(2))
-    // {   
-      // 3. 태그한 사용자가 술래이면서 빼앗은 칩을 1개 이상 가지고 있다면
-      NeoFunc = NeoNo;
-      for(int i = 0; i < NUMPIXELS_ROUND; i++){
-        if(i == 0){
-          pixels_side.clear();
-          pixels_square.clear();
-          pixels_round.clear(); 
-        }
-        pixels_round.lightColor(purple, i);
-        delay(50);
+    // {
+    // 3. 태그한 사용자가 술래이면서 빼앗은 칩을 1개 이상 가지고 있다면
+    NeoFunc = NeoNo;
+    for (int i = 0; i < NUMPIXELS_ROUND; i++)
+    {
+      if (i == 0)
+      {
+        pixels_side.clear();
+        pixels_square.clear();
+        pixels_round.clear();
       }
-
-      has2wifi.Send((String)(const char *)my["device_name"], "taken_chip", "+1");
-      has2wifi.Send((String)(const char *)tag["device_name"], "taken_chip", "-1");
-      has2wifi.Send((String)(const char *)tag["device_name"], "exp", "+100");
-
-      pixels_round.clear();
-      pixels_side.clear();
-      pixels_square.clear();
-
-      NeoFunc = NeoGaming;
+      pixels_round.lightColor(purple, i);
+      delay(50);
     }
+
+    has2wifi.Send((String)(const char *)my["device_name"], "taken_chip", "+1");
+    has2wifi.Send((String)(const char *)tag["device_name"], "taken_chip", "-1");
+    has2wifi.Send((String)(const char *)tag["device_name"], "exp", "+100");
+
+    pixels_round.clear();
+    pixels_side.clear();
+    pixels_square.clear();
+
+    NeoFunc = NeoGaming;
+  }
   //}
 }
 
@@ -153,8 +163,9 @@ bool RfidNsecTag(int sec)
     nsec_tag_timer_id = nsec_tag_timer.setTimeout(2000, NsecTagTimerSuccessFunc);
     return true;
   }
-  else{
-    nsec_tag_num++; 
+  else
+  {
+    nsec_tag_num++;
   }
   return false;
 }
@@ -173,13 +184,15 @@ void NeoBeforeTagger()
   breathe_direction ? breathe++ : breathe--;
 
   pixels_round.lightColor(white);
-  pixels_side.lightRgb(breathe,breathe,breathe);
+  pixels_side.lightRgb(breathe, breathe, breathe);
   pixels_square.lightColor(red);
 
-  if(breathe == 0){
+  if (breathe == 0)
+  {
     breathe_direction = true;
   }
-  else if(breathe == 20){
+  else if (breathe == 20)
+  {
     breathe_direction = false;
   }
 }
@@ -192,16 +205,18 @@ void NeoTagger()
 
   breathe_direction_2 ? breathe_2++ : breathe_2--;
 
-  pixels_side.lightRgb(breathe_2,breathe_2,breathe_2);
+  pixels_side.lightRgb(breathe_2, breathe_2, breathe_2);
 
-  if(breathe_2 == 0){
+  if (breathe_2 == 0)
+  {
     breathe_direction_2 = true;
   }
-  else if(breathe_2 == 20){
+  else if (breathe_2 == 20)
+  {
     breathe_direction_2 = false;
   }
 
-  pixels_round.clear(); 
+  pixels_round.clear();
   NeoArrow();
 }
 
@@ -212,9 +227,10 @@ void NeoTaggerTag()
   pixels_round.clear();
   pixels_side.clear();
 
-   pixels_round.lightColor(purple, tag_neo);
+  pixels_round.lightColor(purple, tag_neo);
 
-  if(++tag_neo > NUMPIXELS_ROUND){
+  if (++tag_neo > NUMPIXELS_ROUND)
+  {
     tag_neo = 0;
 
     pixels_round.clear();
@@ -227,13 +243,15 @@ void NeoAfterTagger()
 {
   static bool after_tagger_neo_bool = false;
 
-  if(after_tagger_neo_bool){
+  if (after_tagger_neo_bool)
+  {
     after_tagger_neo_bool = false;
     pixels_round.clear();
     pixels_side.clear();
     pixels_square.clear();
   }
-  else{
+  else
+  {
     after_tagger_neo_bool = true;
     pixels_round.lightColor(purple);
     pixels_side.lightColor(purple);
@@ -253,10 +271,12 @@ void NeoGaming()
   pixels_side.lightRgb(breathe, 0, breathe);
   NeoArrow();
 
-  if(breathe == 0){
+  if (breathe == 0)
+  {
     breathe_direction = true;
   }
-  else if(breathe == 20){
+  else if (breathe == 20)
+  {
     breathe_direction = false;
   }
 }
@@ -290,20 +310,23 @@ void NeoWin()
 
   win_neo_delay = win_neo_delay - 100;
 
-  if(win_neo_bool){
+  if (win_neo_bool)
+  {
     win_neo_bool = false;
     pixels_round.lightRgb(0, 0, win_neo);
     pixels_side.lightRgb(0, 0, win_neo);
     pixels_square.lightRgb(0, 0, win_neo);
   }
-  else{
+  else
+  {
     win_neo_bool = true;
     pixels_round.clear();
     pixels_side.clear();
     pixels_square.clear();
   }
 
-  if(win_neo_delay <= 300){
+  if (win_neo_delay <= 300)
+  {
     pixels_round.clear();
     pixels_side.clear();
     pixels_square.clear();
@@ -322,21 +345,23 @@ void NeoLose()
   lose_neo_delay = lose_neo_delay - 100;
 
   // 깜빡임을 표현
-  if(lose_neo_bool){
+  if (lose_neo_bool)
+  {
     lose_neo_bool = false;
     pixels_round.lightRgb(lose_neo, 0, 0);
     pixels_side.lightRgb(lose_neo, 0, 0);
     pixels_square.lightRgb(lose_neo, 0, 0);
   }
-  else{
+  else
+  {
     lose_neo_bool = true;
     pixels_round.clear();
     pixels_side.clear();
     pixels_square.clear();
   }
 
-
-  if(lose_neo_delay <= 300){
+  if (lose_neo_delay <= 300)
+  {
     pixels_round.clear();
     pixels_side.clear();
     pixels_square.clear();
@@ -353,56 +378,56 @@ void NeoArrow()
   {
   case 0:
     pixels_square.clear();
-  break;
+    break;
 
   case 1:
     arrow_neo_line_1 = 0;
     arrow_neo_line_2 = 16;
     arrow_neo_line_3 = 0;
-  break;
-    
+    break;
+
   case 2:
     arrow_neo_line_1 = 1;
     arrow_neo_line_2 = 24;
     arrow_neo_line_3 = 1;
-  break;
-    
+    break;
+
   case 3:
     arrow_neo_line_1 = 3;
     arrow_neo_line_2 = 12;
     arrow_neo_line_3 = 3;
-  break;
-    
+    break;
+
   case 4:
     arrow_neo_line_1 = 6;
     arrow_neo_line_2 = 6;
     arrow_neo_line_3 = 6;
-  break;
-    
+    break;
+
   case 5:
     arrow_neo_line_1 = 12;
     arrow_neo_line_2 = 3;
     arrow_neo_line_3 = 12;
-  break;
-    
+    break;
+
   case 6:
     arrow_neo_line_1 = 24;
     arrow_neo_line_2 = 1;
     arrow_neo_line_3 = 24;
-  break;
+    break;
 
   case 7:
     arrow_neo_line_1 = 16;
     arrow_neo_line_2 = 0;
     arrow_neo_line_3 = 16;
-  break;
-
+    break;
 
   default:
-  break;
+    break;
   }
 
-  if(++arrow_pattern > 7){
+  if (++arrow_pattern > 7)
+  {
     arrow_pattern = 0;
   }
 
@@ -416,13 +441,16 @@ void NeoArrowSet(int arrow_neo_line_num, int arrow_neo_line)
 {
   int neo_num = 0;
 
-  if(arrow_neo_line_num == 1){
+  if (arrow_neo_line_num == 1)
+  {
     neo_num = 0;
   }
-  else if(arrow_neo_line_num == 2){
+  else if (arrow_neo_line_num == 2)
+  {
     neo_num = 5;
   }
-  else if(arrow_neo_line_num == 3){
+  else if (arrow_neo_line_num == 3)
+  {
     neo_num = 10;
   }
 

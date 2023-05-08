@@ -5,7 +5,8 @@
  */
 void DisplayCheck()
 {
-    while(Serial2.available()>0){
+    while (Serial2.available() > 0)
+    {
         String nextion_string = Serial2.readStringUntil(' ');
         NextionReceived(&nextion_string);
     }
@@ -13,7 +14,7 @@ void DisplayCheck()
 
 /**
  * @brief 디스플레이에서 오는 Serial을 확인
- * 
+ *
  * @param nextion_string Serial 문자열 데이터
  */
 void NextionReceived(String *nextion_string)
@@ -26,7 +27,14 @@ void NextionReceived(String *nextion_string)
 void SendCmd(String command)
 {
     String cmd = "";
-    cmd = command;
-    
+    if (command.startsWith("page") && (String)(const char *)shift_machine["select_language"] != "KO")
+    {
+        cmd = "page E" + command.substring(5);
+    }
+    else
+    {
+        cmd = command;
+    }
+
     sendCommand(cmd.c_str());
 }

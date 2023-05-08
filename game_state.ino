@@ -6,7 +6,7 @@
 void SettingFunc()
 {
     bool activate_bool = false;
-    sendCommand("page ready");
+    SendCmd("page ready");
     NeoFunc = NeoNo;
     pixels_round.lightColor(white);
     pixels_side.lightColor(white);
@@ -20,7 +20,7 @@ void SettingFunc()
 void ReadyFunc()
 {
     bool activate_bool = false;
-    sendCommand("page ready");
+    SendCmd("page ready");
     NeoFunc = NeoBeforeTagger;
 }
 
@@ -46,38 +46,48 @@ void DataChange()
 
     String cmd;
 
-    if ((String)(const char *)my["game_state"] != (String)(const char *)cur["game_state"]){
-        if ((String)(const char *)my["game_state"] == "setting"){
+    if ((String)(const char *)my["game_state"] != (String)(const char *)cur["game_state"])
+    {
+        if ((String)(const char *)my["game_state"] == "setting")
+        {
             SettingFunc();
         }
-        else if ((String)(const char *)my["game_state"] == "ready"){
+        else if ((String)(const char *)my["game_state"] == "ready")
+        {
             ReadyFunc();
         }
-        else if ((String)(const char *)my["game_state"] == "activate"){
+        else if ((String)(const char *)my["game_state"] == "activate")
+        {
             ActivateRunOnce();
         }
     }
- 
-    if((String)(const char*)my["device_state"] != (String)(const char*)cur["device_state"]){
-        if((String)(const char*)my["device_state"] == "activate"){
-            sendCommand("page basic");
+
+    if ((String)(const char *)my["device_state"] != (String)(const char *)cur["device_state"])
+    {
+        if ((String)(const char *)my["device_state"] == "activate")
+        {
+            SendCmd("page basic");
             NeoFunc = NeoGaming;
         }
-        else if((String)(const char*)my["device_state"] == "player_win"){
-            sendCommand("page lose");
+        else if ((String)(const char *)my["device_state"] == "player_win")
+        {
+            SendCmd("page lose");
             NeoFunc = NeoLose;
         }
-        else if((String)(const char*)my["device_state"] == "player_lose"){
-            sendCommand("page win");
+        else if ((String)(const char *)my["device_state"] == "player_lose")
+        {
+            SendCmd("page win");
             NeoFunc = NeoWin;
         }
-        else if((String)(const char*)my["device_state"] == "blink"){
+        else if ((String)(const char *)my["device_state"] == "blink")
+        {
             NeoFunc = NeoTagger;
             activate_bool = true;
         }
     }
 
-    if ((int)my["taken_chip"] != (int)cur["taken_chip"]){
+    if ((int)my["taken_chip"] != (int)cur["taken_chip"])
+    {
         cmd = "taken_chip.pic=4+" + (String)(const char *)my["taken_chip"];
         sendCommand(cmd.c_str());
     }

@@ -6,10 +6,9 @@
 //============================ Global Variable ============================
 void (*NeoFunc)();
 
-
 //============================ Hardware Serial ============================
 // HardwareSerial MySerial1(1); // 사용X
-HardwareSerial MySerial2(2);    // Display
+HardwareSerial MySerial2(2); // Display
 
 //================================ Wifi ==================================
 HAS2_Wifi has2wifi;
@@ -22,12 +21,6 @@ void ActionFunc();
 void DataChange();
 
 //=============================== Display ================================
-NexPage page_ready(0, 0, "ready");
-NexPage page_win(1, 0, "win");
-NexPage page_lose(2, 0, "lose");
-NexPage page_basic(3, 0, "basic");
-NexPage page_mega(4, 0, "mega");
-
 void DisplayCheck();
 void NextionReceived(String *nextion_string);
 void SendCmd(String command);
@@ -42,7 +35,7 @@ void SensorInit();
 Adafruit_PN532 nfc(PN532_SCK, PN532_MISO, PN532_MOSI, PN532_SS);
 
 bool rfid_tag = false;
-byte rfid_tag_count = 0;  // 몇번 태그 됐는지 (= 덕트를 몇 번 사용했는지) 확인하는 변수
+byte rfid_tag_count = 0; // 몇번 태그 됐는지 (= 덕트를 몇 번 사용했는지) 확인하는 변수
 
 bool send_nfc_err = false;
 
@@ -51,10 +44,10 @@ void RfidLoop(void);
 void CardChecking(uint8_t rfidData[32]);
 
 //=============================== Neopixel ===============================
-//TODO 네오픽셀 개수 확인
-#define NUMPIXELS_SQUARE    15
-#define NUMPIXELS_ROUND     24
-#define NUMPIXELS_SIDE      96
+// TODO 네오픽셀 개수 확인
+#define NUMPIXELS_SQUARE 15
+#define NUMPIXELS_ROUND 24
+#define NUMPIXELS_SIDE 96
 Adafruit_NeoPixel pixels_square(NUMPIXELS_SQUARE, NEOPIXEL_PIN_SQUARE, NEO_GRB + NEO_KHZ800);
 Adafruit_NeoPixel pixels_round(NUMPIXELS_ROUND, NEOPIXEL_PIN_ROUND, NEO_GRB + NEO_KHZ800);
 Adafruit_NeoPixel pixels_side(NUMPIXELS_SIDE, NEOPIXEL_PIN_SIDE, NEO_GRB + NEO_KHZ800);
