@@ -1,10 +1,10 @@
 /**
  * @file temple.ino
  * @author YuBin Kim
- * @brief 
+ * @brief
  * @version 0.1
  * @date 2022-11-24 ~ 2022-11-26
- * 
+ *
  * @copyright Copyright (c) 2022
  */
 
@@ -17,11 +17,11 @@
 void TempleInit()
 {
   // has2wifi.Setup("KT_GiGA_6C64", "ed46zx1198");                     // 와이파이 세팅
-  has2wifi.Setup();
+  has2wifi.Setup("city");
   nexInit();                                                         // 디스플레이 세팅
   MySerial2.begin(9600, SERIAL_8N1, SERIAL2_RX_PIN, SERIAL2_TX_PIN); // 디스플레이 세팅
-  SensorInit();                                                      // IoT Glove 사용 센서, 모듈 세팅    
-  TimerInit();                                                  // 타이머 세팅
+  SensorInit();                                                      // IoT Glove 사용 센서, 모듈 세팅
+  TimerInit();                                                       // 타이머 세팅
 }
 
 /**
@@ -42,5 +42,8 @@ void loop()
 {
   TimerRun();
   NeoFunc();
-  if(activate_bool){ ActivateFunc(); }
+  if (activate_bool)
+  {
+    ActivateFunc();
+  }
 }

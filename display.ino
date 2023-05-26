@@ -27,7 +27,7 @@ void NextionReceived(String *nextion_string)
 void SendCmd(String command)
 {
     String cmd = "";
-    if (command.startsWith("page") && (String)(const char *)shift_machine["select_language"] != "KO")
+    if (command.startsWith("page") && (String)(const char *)shift_machine["selected_language"] == "EN")
     {
         cmd = "page E" + command.substring(5);
     }
