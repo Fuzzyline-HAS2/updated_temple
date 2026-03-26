@@ -1,5 +1,5 @@
-#ifndef _TEMPLE_H_
-#define _TEMPLE_H_
+#ifndef _UPDATED_TEMPLE_H_
+#define _UPDATED_TEMPLE_H_
 
 #include "library_and_pin.h"
 
@@ -11,7 +11,7 @@ void (*NeoFunc)();
 HardwareSerial MySerial2(2); // Display
 
 //================================ Wifi ==================================
-HAS2_Wifi has2wifi;
+HAS2_Wifi has2wifi("http://172.30.1.43");
 
 bool activate_bool;
 
@@ -63,6 +63,10 @@ int red[3] = {20, 0, 0};
 int yellow[3] = {20, 20, 0};
 int green[3] = {0, 20, 0};
 int purple[3] = {20, 0, 20};
+
+void lightColor(Adafruit_NeoPixel &pixels, int color[3]);
+void lightColor(Adafruit_NeoPixel &pixels, int color[3], int index);
+void lightRgb(Adafruit_NeoPixel &pixels, int r, int g, int b);
 
 void NeoNo();
 void NeoBeforeTagger();

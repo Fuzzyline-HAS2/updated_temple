@@ -8,9 +8,9 @@ void SettingFunc()
     bool activate_bool = false;
     SendCmd("page ready");
     NeoFunc = NeoNo;
-    pixels_round.lightColor(white);
-    pixels_side.lightColor(white);
-    pixels_square.lightColor(white);
+    lightColor(pixels_round, white);
+    lightColor(pixels_side, white);
+    lightColor(pixels_square, white);
 }
 
 /**

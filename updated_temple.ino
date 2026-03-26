@@ -1,5 +1,5 @@
 /**
- * @file temple.ino
+ * @file updated_temple.ino
  * @author YuBin Kim
  * @brief
  * @version 0.1
@@ -8,7 +8,7 @@
  * @copyright Copyright (c) 2022
  */
 
-#include "temple.h"
+#include "updated_temple.h"
 
 //************************************************ Core1 ********************************************************************
 /**

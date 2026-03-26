@@ -86,17 +86,17 @@ void CardChecking(uint8_t rfidData[32]) // 어떤 카드가 들어왔는지 확�
     pixels_side.clear();
     pixels_square.clear();
     delay(300);
-    pixels_round.lightColor(purple);
-    pixels_side.lightColor(purple);
-    pixels_square.lightColor(purple);
+    lightColor(pixels_round, purple);
+    lightColor(pixels_side, purple);
+    lightColor(pixels_square, purple);
     delay(300);
     pixels_round.clear();
     pixels_side.clear();
     pixels_square.clear();
     delay(300);
-    pixels_round.lightColor(purple);
-    pixels_side.lightColor(purple);
-    pixels_square.lightColor(purple);
+    lightColor(pixels_round, purple);
+    lightColor(pixels_side, purple);
+    lightColor(pixels_square, purple);
 
     has2wifi.Send((String)(const char *)my["device_name"], "device_state", "activate");
     has2wifi.Send((String)(const char *)tag["device_name"], "device_state", "activate");
@@ -126,7 +126,7 @@ void CardChecking(uint8_t rfidData[32]) // 어떤 카드가 들어왔는지 확�
         pixels_square.clear();
         pixels_round.clear();
       }
-      pixels_round.lightColor(purple, i);
+      lightColor(pixels_round, purple, i);
       delay(50);
     }
 
@@ -170,6 +170,25 @@ bool RfidNsecTag(int sec)
   return false;
 }
 
+//******************************************* Neopixel Helpers *******************************************
+void lightColor(Adafruit_NeoPixel &pixels, int color[3])
+{
+  pixels.fill(pixels.Color(color[0], color[1], color[2]));
+  pixels.show();
+}
+
+void lightColor(Adafruit_NeoPixel &pixels, int color[3], int index)
+{
+  pixels.setPixelColor(index, color[0], color[1], color[2]);
+  pixels.show();
+}
+
+void lightRgb(Adafruit_NeoPixel &pixels, int r, int g, int b)
+{
+  pixels.fill(pixels.Color(r, g, b));
+  pixels.show();
+}
+
 //******************************************* Neopixel *******************************************
 void NeoNo()
 {
@@ -183,9 +202,9 @@ void NeoBeforeTagger()
 
   breathe_direction ? breathe++ : breathe--;
 
-  pixels_round.lightColor(white);
-  pixels_side.lightRgb(breathe, breathe, breathe);
-  pixels_square.lightColor(red);
+  lightColor(pixels_round, white);
+  lightRgb(pixels_side, breathe, breathe, breathe);
+  lightColor(pixels_square, red);
 
   if (breathe == 0)
   {
@@ -205,7 +224,7 @@ void NeoTagger()
 
   breathe_direction_2 ? breathe_2++ : breathe_2--;
 
-  pixels_side.lightRgb(breathe_2, breathe_2, breathe_2);
+  lightRgb(pixels_side, breathe_2, breathe_2, breathe_2);
 
   if (breathe_2 == 0)
   {
@@ -227,7 +246,7 @@ void NeoTaggerTag()
   pixels_round.clear();
   pixels_side.clear();
 
-  pixels_round.lightColor(purple, tag_neo);
+  lightColor(pixels_round, purple, tag_neo);
 
   if (++tag_neo > NUMPIXELS_ROUND)
   {
@@ -253,9 +272,9 @@ void NeoAfterTagger()
   else
   {
     after_tagger_neo_bool = true;
-    pixels_round.lightColor(purple);
-    pixels_side.lightColor(purple);
-    pixels_square.lightColor(purple);
+    lightColor(pixels_round, purple);
+    lightColor(pixels_side, purple);
+    lightColor(pixels_square, purple);
   }
 }
 
@@ -267,8 +286,8 @@ void NeoGaming()
 
   breathe_direction ? breathe++ : breathe--;
 
-  pixels_round.lightRgb(breathe, 0, breathe);
-  pixels_side.lightRgb(breathe, 0, breathe);
+  lightRgb(pixels_round, breathe, 0, breathe);
+  lightRgb(pixels_side, breathe, 0, breathe);
   NeoArrow();
 
   if (breathe == 0)
@@ -313,9 +332,9 @@ void NeoWin()
   if (win_neo_bool)
   {
     win_neo_bool = false;
-    pixels_round.lightRgb(0, 0, win_neo);
-    pixels_side.lightRgb(0, 0, win_neo);
-    pixels_square.lightRgb(0, 0, win_neo);
+    lightRgb(pixels_round, 0, 0, win_neo);
+    lightRgb(pixels_side, 0, 0, win_neo);
+    lightRgb(pixels_square, 0, 0, win_neo);
   }
   else
   {
@@ -348,9 +367,9 @@ void NeoLose()
   if (lose_neo_bool)
   {
     lose_neo_bool = false;
-    pixels_round.lightRgb(lose_neo, 0, 0);
-    pixels_side.lightRgb(lose_neo, 0, 0);
-    pixels_square.lightRgb(lose_neo, 0, 0);
+    lightRgb(pixels_round, lose_neo, 0, 0);
+    lightRgb(pixels_side, lose_neo, 0, 0);
+    lightRgb(pixels_square, lose_neo, 0, 0);
   }
   else
   {
