@@ -1,4 +1,4 @@
-#include "temple.h"
+#include "updated_temple.h"
 
 void TimerInit()
 {

@@ -142,10 +142,10 @@ void initOTA() {
   Serial.println("\n[OTA 모듈] 초기화 시작...");
 
   Serial.print("[OTA 모듈] 와이파이 연결 중: ");
-  Serial.println(ssid);
+  Serial.println(ota_ssid);
 
   WiFi.mode(WIFI_STA);
-  WiFi.begin(ssid, password);
+  WiFi.begin(ota_ssid, ota_password);
 
   int tries = 0;
   while (WiFi.status() != WL_CONNECTED && tries < 20) {

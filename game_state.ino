@@ -1,4 +1,4 @@
-#include "temple.h"
+#include "updated_temple.h"
 
 /**
  * @brief DB gamestate가 setting 일 때 한번동작하는 코드
