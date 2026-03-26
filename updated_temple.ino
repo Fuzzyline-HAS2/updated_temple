@@ -31,7 +31,7 @@ void setup()
 {
   delay(1000);
   Serial.begin(115200);
-  Serial.println("OTA 업데이트 기능 작동해욤");
+  Serial.println("OTA 업데이트 기능 되지롱");
   initOTA();    // OTA 모듈: WiFi 연결 및 펌웨어 업데이트 체크 (필수!)
   TempleInit();
   DataChange();
