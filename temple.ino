@@ -17,7 +17,7 @@
 void TempleInit()
 {
   // has2wifi.Setup("KT_GiGA_6C64", "ed46zx1198");                     // 와이파이 세팅
-  has2wifi.Setup("city");
+  has2wifi.Setup("badland_ruins", "Code3824@");
   nexInit();                                                         // 디스플레이 세팅
   MySerial2.begin(9600, SERIAL_8N1, SERIAL2_RX_PIN, SERIAL2_TX_PIN); // 디스플레이 세팅
   SensorInit();                                                      // IoT Glove 사용 센서, 모듈 세팅
@@ -31,6 +31,7 @@ void setup()
 {
   delay(1000);
   Serial.begin(115200);
+  initOTA();    // OTA 모듈: WiFi 연결 및 펌웨어 업데이트 체크 (필수!)
   TempleInit();
   DataChange();
 }
