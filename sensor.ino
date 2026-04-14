@@ -21,14 +21,12 @@ void RfidInit(void)
   nfc.begin(); // nfc 함수 시작
   if (!(nfc.getFirmwareVersion()))
   {
-    Serial.print("!!!RFID 연결실패!!!");
+    Serial.println("!!!RFID 연결실패!!! - 계속 진행");
     has2wifi.Send((String)(const char *)my["device_name"], "device_state", "PN532");
+    return;
   }
-  else
-  {
-    nfc.SAMConfig(); // configure board to read RFID tags
-    Serial.println("RFID 연결성공");
-  }
+  nfc.SAMConfig(); // configure board to read RFID tags
+  Serial.println("RFID 연결성공");
 }
 
 /**
