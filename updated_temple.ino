@@ -8,7 +8,7 @@
  * @copyright Copyright (c) 2022
  */
 
-#define FIRMWARE_VER 3
+#define FIRMWARE_VER 2
 #include "updated_temple.h"
 
 //************************************************ Core1 ********************************************************************
@@ -17,7 +17,7 @@
  */
 void TempleInit()
 {
-  // has2wifi.Setup("KT_GiGA_6C64", "ed46zx1198");                     // 와이파이 세팅
+  // has2wifi.Setup("KT_GiGA_6C64", "ed46zx1198");                     j// 와이파이 세팅
   has2wifi.Setup("badland_ruins", "Code3824@");
   ota.setLogStream(Serial);
   ota.setOnSuccess([]() {
