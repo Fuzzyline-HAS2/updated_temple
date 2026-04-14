@@ -16,6 +16,9 @@
 #include <SimpleTimer.h>
 #include <esp_task_wdt.h>
 
+#include <SecureOTA.h>
+#include "secrets.h"
+
 
 // 핀 선언
 

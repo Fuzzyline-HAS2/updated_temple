@@ -4,7 +4,8 @@
 #include "library_and_pin.h"
 
 //============================ Global Variable ============================
-void (*NeoFunc)();
+void NeoNo();
+void (*NeoFunc)() = NeoNo;
 
 //============================ Hardware Serial ============================
 // HardwareSerial MySerial1(1); // 사용X
@@ -12,6 +13,14 @@ HardwareSerial MySerial2(2); // Display
 
 //================================ Wifi ==================================
 HAS2_Wifi has2wifi("http://172.30.1.43");
+
+SecureOTA ota(
+  "https://raw.githubusercontent.com/Fuzzyline-HAS2/updated_temple/main/update.bin",
+  "https://raw.githubusercontent.com/Fuzzyline-HAS2/updated_temple/main/version.txt",
+  "https://raw.githubusercontent.com/Fuzzyline-HAS2/updated_temple/main/update.sig",
+  HMAC_SECRET,
+  FIRMWARE_VER
+);
 
 bool activate_bool;
 
@@ -69,7 +78,6 @@ void lightColor(Adafruit_NeoPixel &pixels, int color[3]);
 void lightColor(Adafruit_NeoPixel &pixels, int color[3], int index);
 void lightRgb(Adafruit_NeoPixel &pixels, int r, int g, int b);
 
-void NeoNo();
 void NeoBeforeTagger();
 void NeoTagger();
 void NeoTaggerTag();

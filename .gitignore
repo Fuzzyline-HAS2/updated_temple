@@ -3,6 +3,11 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
+# SecureOTA secrets (절대 커밋 금지)
+secrets.h
+scripts/secrets.py
+# update.bin · update.sig · version.txt 는 제외하지 않음 (기기가 다운로드해야 함)
+
 # User-specific files
 *.rsuser
 *.suo

@@ -45,6 +45,12 @@ void ActivateRunOnce()
 
 void DataChange()
 {
+    if (!(const char *)my["device_name"])
+    {
+        Serial.println("[DataChange] 서버 데이터 없음, 스킵");
+        return;
+    }
+
     static StaticJsonDocument<1000> cur;
 
     String cmd;
@@ -91,6 +97,10 @@ void DataChange()
         {
             NeoFunc = NeoTagger;
             activate_bool = true;
+        }
+        else if ((String)(const char *)my["device_state"] == "github")
+        {
+            ota.check();
         }
     }
 

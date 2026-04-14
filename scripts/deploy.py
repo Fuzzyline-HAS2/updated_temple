@@ -5,122 +5,130 @@ import shutil
 import subprocess
 import glob
 
-# Windows CMD에서 이모지 출력을 위한 설정
+# Windows CMD 이모지 출력을 위한 설정
 sys.stdout.reconfigure(encoding='utf-8')
 
-# ================= 설정 =================
-# 현재 스크립트(scripts/deploy.py)의 상위 폴더를 프로젝트 루트로 설정
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+SCRIPT_DIR    = os.path.dirname(os.path.abspath(__file__))
+BASE_DIR      = os.path.dirname(SCRIPT_DIR)
 
-CONFIG_FILE = os.path.join(BASE_DIR, "UserConfig.h")
-BUILD_DIR = os.path.join(BASE_DIR, "build")
-OUTPUT_FILENAME = "update.bin"
-# =======================================
+# ── 기기 저장소에 맞게 변경 ─────────────────────────────────
+SKETCH_FILE   = os.path.join(BASE_DIR, "updated_temple.ino")
+VERSION_MACRO = "FIRMWARE_VER"
+# ────────────────────────────────────────────────────────────
+
+OUTPUT_BIN    = os.path.join(BASE_DIR, "update.bin")
+OUTPUT_SIG    = os.path.join(BASE_DIR, "update.sig")
+VERSION_TXT   = os.path.join(BASE_DIR, "version.txt")
+
+try:
+    sys.path.insert(0, SCRIPT_DIR)
+    from secrets import HMAC_SECRET
+except ImportError:
+    print("❌ 오류: scripts/secrets.py 파일이 없습니다.")
+    print("   secrets.py.example 을 secrets.py 로 복사한 뒤 비밀키를 설정하세요.")
+    sys.exit(1)
 
 def get_current_version():
-    with open(CONFIG_FILE, "r", encoding="utf-8") as f:
+    with open(SKETCH_FILE, "r", encoding="utf-8") as f:
         content = f.read()
-    match = re.search(r'#define CURRENT_FIRMWARE_VERSION (\d+)', content)
+    pattern = rf'#define\s+{VERSION_MACRO}\s+(\d+)'
+    match = re.search(pattern, content)
     if match:
         return int(match.group(1))
     return None
 
 def increment_version(current_ver):
     new_ver = current_ver + 1
-    with open(CONFIG_FILE, "r", encoding="utf-8") as f:
+    with open(SKETCH_FILE, "r", encoding="utf-8") as f:
         content = f.read()
-
     new_content = re.sub(
-        r'#define CURRENT_FIRMWARE_VERSION \d+',
-        f'#define CURRENT_FIRMWARE_VERSION {new_ver}',
+        rf'#define\s+{VERSION_MACRO}\s+\d+',
+        f'#define {VERSION_MACRO} {new_ver}',
         content
     )
-
-    with open(CONFIG_FILE, "w", encoding="utf-8") as f:
+    with open(SKETCH_FILE, "w", encoding="utf-8") as f:
         f.write(new_content)
     return new_ver
 
 def find_newest_bin():
+    sketch_dir = os.path.dirname(SKETCH_FILE)
     search_patterns = [
-        os.path.join(BUILD_DIR, "**", "*.bin"),
-        os.path.join(BASE_DIR, "*.bin"),
-        os.path.join(BASE_DIR, "**", "*.bin")
+        os.path.join(sketch_dir, "build", "**", "*.bin"),
+        os.path.join(sketch_dir, "**", "*.bin"),
+        os.path.join(BASE_DIR, "build", "**", "*.bin"),
     ]
-
     candidates = []
     for pattern in search_patterns:
         candidates.extend(glob.glob(pattern, recursive=True))
-
-    # OUTPUT_FILENAME 및 불필요한 바이너리 제외
-    candidates = [f for f in candidates if not f.endswith(OUTPUT_FILENAME)]
-    candidates = [f for f in candidates if "merged" not in f]
-    candidates = [f for f in candidates if "bootloader" not in f]
-    candidates = [f for f in candidates if "partitions" not in f]
-    candidates = [f for f in candidates if "boot_app" not in f]
-
+    exclude_keywords = ["update", "merged", "bootloader", "partitions", "boot_app"]
+    candidates = [
+        f for f in candidates
+        if not any(kw in os.path.basename(f).lower() for kw in exclude_keywords)
+    ]
     if not candidates:
         return None
-
-    newest_file = max(candidates, key=os.path.getmtime)
-    return newest_file
+    return max(candidates, key=os.path.getmtime)
 
 def git_push(version):
-    print("\n☁️ GitHub에 업로드 중...")
+    print("\n☁️ GitHub 에 업로드 중...")
     try:
-        version_file = os.path.join(BASE_DIR, "version.txt")
-        with open(version_file, "w", encoding="utf-8") as f:
+        with open(VERSION_TXT, "w", encoding="utf-8") as f:
             f.write(str(version))
-        print(f"📝 version.txt를 {version}로 업데이트했습니다.")
-
-        subprocess.run(["git", "add", "."], check=True)
-        subprocess.run(["git", "commit", "-m", f"Firmware Update v{version}"], check=True)
-        subprocess.run(["git", "push"], check=True)
-        print("✅ 업로드 완료!")
+        print(f"📝 version.txt → v{version}")
+        files_to_add = [
+            "update.bin",
+            "update.sig",
+            "version.txt",
+            os.path.relpath(SKETCH_FILE, BASE_DIR).replace("\\", "/"),
+        ]
+        subprocess.run(["git", "-C", BASE_DIR, "add"] + files_to_add, check=True)
+        subprocess.run(
+            ["git", "-C", BASE_DIR, "commit", "-m", f"Firmware Update v{version}"],
+            check=True
+        )
+        subprocess.run(["git", "-C", BASE_DIR, "push"], check=True)
+        print("✅ GitHub 업로드 완료!")
     except subprocess.CalledProcessError as e:
-        print(f"❌ Git 오류 발생: {e}")
-        print("Git이 설치되어 있고 저장소가 연결되어 있는지 확인해주세요.")
+        print(f"❌ Git 오류: {e}")
 
 def main():
-    print("🚀 OTA 배포 자동화를 시작합니다...")
-
-    # 1. 버전 확인 및 증가
+    print("🚀 SecureOTA 배포 자동화 시작...")
+    if HMAC_SECRET == "CHANGE_THIS_TO_YOUR_SECRET":
+        print("❌ 오류: scripts/secrets.py 의 HMAC_SECRET 을 설정하세요.")
+        return
     cur_ver = get_current_version()
     if cur_ver is None:
-        print(f"❌ 오류: {CONFIG_FILE}에서 버전을 찾을 수 없습니다.")
+        print(f"❌ 오류: {SKETCH_FILE} 에서 '#define {VERSION_MACRO}' 를 찾을 수 없습니다.")
         return
-
-    print(f"현재 버전: {cur_ver}")
+    print(f"\n현재 버전: v{cur_ver}")
     new_ver = increment_version(cur_ver)
-    print(f"🔼 버전을 {new_ver}로 변경했습니다.")
-
-    # 2. 컴파일 대기
-    print("\n⏳ [행동 필요] 이제 Arduino IDE에서 '컴파일(Verify)' 버튼을 눌러주세요.")
-    print("   컴파일이 완료되면 엔터(Enter) 키를 눌러주세요...")
+    print(f"🔼 버전 변경: v{cur_ver} → v{new_ver}")
+    print("\n⏳ [행동 필요] 아두이노 IDE 에서 Ctrl+Alt+S 를 실행하세요.")
+    print("   완료되면 Enter 를 누르세요...")
     input()
-
-    # 3. 파일 찾기
-    print("🔎 빌드된 파일을 찾는 중...")
+    print("🔎 빌드 파일 탐색 중...")
     bin_file = find_newest_bin()
     if not bin_file:
-        print("❌ 오류: .bin 파일을 찾을 수 없습니다.")
-        print("   빌드가 제대로 되었는지, build 폴더가 있는지 확인해주세요.")
+        print("❌ .bin 파일을 찾을 수 없습니다.")
         return
-
-    print(f"   찾음: {bin_file}")
-
-    # 4. 파일 복사
+    print(f"   발견: {os.path.relpath(bin_file, BASE_DIR)}")
     try:
-        shutil.copy2(bin_file, os.path.join(BASE_DIR, OUTPUT_FILENAME))
-        print(f"📦 파일을 '{OUTPUT_FILENAME}'으로 복사했습니다.")
+        shutil.copy2(bin_file, OUTPUT_BIN)
+        print(f"📦 → update.bin 복사 완료")
     except Exception as e:
         print(f"❌ 파일 복사 실패: {e}")
         return
-
-    # 5. Git 푸시
+    sign_script = os.path.join(SCRIPT_DIR, "sign_firmware.py")
+    result = subprocess.run(
+        [sys.executable, sign_script, OUTPUT_BIN, HMAC_SECRET, OUTPUT_SIG],
+        capture_output=True, text=True
+    )
+    if result.returncode != 0:
+        print(f"❌ 서명 실패:\n{result.stderr}")
+        return
+    print("🔏 서명 완료 → update.sig")
     git_push(new_ver)
-
-    print("\n🎉 모든 작업이 완료되었습니다!")
-    print(f"   버전 {new_ver}이(가) 곧 배포됩니다.")
+    print(f"\n🎉 배포 완료! v{new_ver} 이(가) GitHub 에 업로드되었습니다.")
 
 if __name__ == "__main__":
     main()
