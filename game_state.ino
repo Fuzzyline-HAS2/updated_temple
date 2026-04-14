@@ -6,6 +6,7 @@
 void SettingFunc()
 {
     bool activate_bool = false;
+    applyBrightness();
     SendCmd("page ready");
     NeoFunc = NeoNo;
     lightColor(pixels_round, white);
@@ -20,6 +21,7 @@ void SettingFunc()
 void ReadyFunc()
 {
     bool activate_bool = false;
+    applyBrightness();
     SendCmd("page ready");
     NeoFunc = NeoBeforeTagger;
 }
@@ -37,6 +39,7 @@ void ActivateFunc()
  */
 void ActivateRunOnce()
 {
+    applyBrightness();
     activate_bool = true;
 }
 
@@ -45,6 +48,11 @@ void DataChange()
     static StaticJsonDocument<1000> cur;
 
     String cmd;
+
+    if ((int)my["brightness"] != (int)cur["brightness"])
+    {
+        applyBrightness();
+    }
 
     if ((String)(const char *)my["game_state"] != (String)(const char *)cur["game_state"])
     {

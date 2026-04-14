@@ -64,6 +64,7 @@ int yellow[3] = {20, 20, 0};
 int green[3] = {0, 20, 0};
 int purple[3] = {20, 0, 20};
 
+void applyBrightness();
 void lightColor(Adafruit_NeoPixel &pixels, int color[3]);
 void lightColor(Adafruit_NeoPixel &pixels, int color[3], int index);
 void lightRgb(Adafruit_NeoPixel &pixels, int r, int g, int b);

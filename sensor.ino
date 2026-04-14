@@ -171,6 +171,17 @@ bool RfidNsecTag(int sec)
 }
 
 //******************************************* Neopixel Helpers *******************************************
+void applyBrightness()
+{
+  int brightness = map((int)my["brightness"], 0, 100, 0, 255);
+  pixels_square.setBrightness(brightness);
+  pixels_round.setBrightness(brightness);
+  pixels_side.setBrightness(brightness);
+  pixels_square.show();
+  pixels_round.show();
+  pixels_side.show();
+}
+
 void lightColor(Adafruit_NeoPixel &pixels, int color[3])
 {
   pixels.fill(pixels.Color(color[0], color[1], color[2]));
