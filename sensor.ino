@@ -171,7 +171,12 @@ bool RfidNsecTag(int sec)
 //******************************************* Neopixel Helpers *******************************************
 void applyBrightness()
 {
-  int brightness = map((int)my["brightness"], 0, 100, 0, 255);
+  int b = (int)my["brightness"];
+  int brightness;
+  if (b <= 0 || b > 100)
+    brightness = 255;
+  else
+    brightness = map(b, 0, 100, 0, 255);
   pixels_square.setBrightness(brightness);
   pixels_round.setBrightness(brightness);
   pixels_side.setBrightness(brightness);

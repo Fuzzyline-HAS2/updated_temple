@@ -6,7 +6,6 @@
 void SettingFunc()
 {
     bool activate_bool = false;
-    applyBrightness();
     SendCmd("page ready");
     NeoFunc = NeoNo;
     lightColor(pixels_round, white);
@@ -21,7 +20,6 @@ void SettingFunc()
 void ReadyFunc()
 {
     bool activate_bool = false;
-    applyBrightness();
     SendCmd("page ready");
     NeoFunc = NeoBeforeTagger;
 }
@@ -39,7 +37,6 @@ void ActivateFunc()
  */
 void ActivateRunOnce()
 {
-    applyBrightness();
     activate_bool = true;
 }
 
@@ -55,25 +52,29 @@ void DataChange()
 
     String cmd;
 
-    if ((int)my["brightness"] != (int)cur["brightness"])
-    {
-        applyBrightness();
-    }
+    bool brightness_changed = ((int)my["brightness"] != (int)cur["brightness"]);
 
     if ((String)(const char *)my["game_state"] != (String)(const char *)cur["game_state"])
     {
         if ((String)(const char *)my["game_state"] == "setting")
         {
+            if (brightness_changed) applyBrightness();
             SettingFunc();
         }
         else if ((String)(const char *)my["game_state"] == "ready")
         {
+            if (brightness_changed) applyBrightness();
             ReadyFunc();
         }
         else if ((String)(const char *)my["game_state"] == "activate")
         {
+            if (brightness_changed) applyBrightness();
             ActivateRunOnce();
         }
+    }
+    else if (brightness_changed)
+    {
+        applyBrightness();
     }
 
     if ((String)(const char *)my["device_state"] != (String)(const char *)cur["device_state"])
