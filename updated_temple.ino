@@ -18,7 +18,7 @@
 void TempleInit()
 {
   // has2wifi.Setup("KT_GiGA_6C64", "ed46zx1198");                     j// 와이파이 세팅
-  has2wifi.Setup("badland_ruins", "Code3824@");
+  has2wifi.Setup("badland");
   ota.setLogStream(Serial);
   ota.setOnSuccess([]() {
     has2wifi.Send((String)(const char *)my["device_name"], "device_state", "setting");
@@ -30,6 +30,7 @@ void TempleInit()
   MySerial2.begin(9600, SERIAL_8N1, SERIAL2_RX_PIN, SERIAL2_TX_PIN); // 디스플레이 세팅
   SensorInit();                                                      // IoT Glove 사용 센서, 모듈 세팅
   TimerInit();                                                       // 타이머 세팅
+  
 }
 
 /**

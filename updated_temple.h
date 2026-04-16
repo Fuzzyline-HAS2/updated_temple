@@ -12,7 +12,7 @@ void (*NeoFunc)() = NeoNo;
 HardwareSerial MySerial2(2); // Display
 
 //================================ Wifi ==================================
-HAS2_Wifi has2wifi("http://172.30.1.43");
+HAS2_Wifi has2wifi("http://172.30.1.44");
 
 SecureOTA ota(
   "https://raw.githubusercontent.com/Fuzzyline-HAS2/updated_temple/main/update.bin",
