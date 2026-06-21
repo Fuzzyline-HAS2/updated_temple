@@ -8,7 +8,7 @@
  * @copyright Copyright (c) 2022
  */
 
-#define FIRMWARE_VER 11
+#define FIRMWARE_VER 12
 #include "updated_temple.h"
 
 //************************************************ Core1 ********************************************************************
@@ -19,6 +19,8 @@ void TempleInit()
 {
   // has2wifi.Setup("KT_GiGA_6C64", "ed46zx1198");                     j// 와이파이 세팅
   has2wifi.Setup("badland");
+  LogMemoryStats("Wi-Fi connected");
+  BleAdvertiserInit();
   ota.setLogStream(Serial);
   ota.setOnSuccess([]() {
     has2wifi.Send((String)(const char *)my["device_name"], "device_state", "setting");
@@ -40,6 +42,7 @@ void setup()
 {
   delay(1000);
   Serial.begin(115200);
+  LogMemoryStats("boot");
   TempleInit();
   DataChange();
   NextionInit();
