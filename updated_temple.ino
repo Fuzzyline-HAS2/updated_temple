@@ -8,7 +8,7 @@
  * @copyright Copyright (c) 2022
  */
 
-#define FIRMWARE_VER 12
+#define FIRMWARE_VER 15
 #include "updated_temple.h"
 
 //************************************************ Core1 ********************************************************************
