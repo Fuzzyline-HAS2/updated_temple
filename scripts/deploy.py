@@ -60,10 +60,11 @@ def find_newest_bin():
     candidates = []
     for pattern in search_patterns:
         candidates.extend(glob.glob(pattern, recursive=True))
-    exclude_keywords = ["update", "merged", "bootloader", "partitions", "boot_app"]
+    exclude_keywords = ["merged", "bootloader", "partitions", "boot_app"]
     candidates = [
         f for f in candidates
-        if not any(kw in os.path.basename(f).lower() for kw in exclude_keywords)
+        if os.path.basename(f).lower() != "update.bin"
+        and not any(kw in os.path.basename(f).lower() for kw in exclude_keywords)
     ]
     if not candidates:
         return None

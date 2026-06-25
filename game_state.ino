@@ -42,13 +42,16 @@ void ActivateRunOnce()
 
 void DataChange()
 {
-    if (!(const char *)my["device_name"])
+    const char *device_name = (const char *)my["device_name"];
+    BleAdvertiserUpdateFromDeviceName(device_name);
+
+    if (!device_name)
     {
         Serial.println("[DataChange] 서버 데이터 없음, 스킵");
         return;
     }
 
-    static StaticJsonDocument<2048> cur;
+    static StaticJsonDocument<1000> cur;
 
     String cmd;
 
@@ -111,9 +114,9 @@ void DataChange()
         cmd = "pgChipCount.vSacrificeChip.val=" + (String)(int)my["taken_chip"];
         sendCommand(cmd.c_str());
     }
-    if((int)my["max_taken_chip"] != (int)cur["max_taken_chip"])
+    if((int)my["max_chip"] != (int)cur["max_chip"])
     {
-        cmd = "pgChipCount.vMaxChip.val=" + (String)(int)my["max_taken_chip"];
+        cmd = "pgChipCount.vMaxChip.val=" + (String)(int)my["max_chip"];
         sendCommand(cmd.c_str());
     }
     SyncLanguage();

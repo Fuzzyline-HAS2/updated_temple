@@ -2,6 +2,7 @@
 #define _UPDATED_TEMPLE_H_
 
 #include "library_and_pin.h"
+#include "location_protocol.h"
 
 //============================ Global Variable ============================
 void NeoNo();
@@ -43,6 +44,10 @@ void SendCmd(String command);
  * @brief Temple에 사용되는 센서, 모듈 세팅
  */
 void SensorInit();
+void BleAdvertiserInit();
+void BleAdvertiserUpdateFromDeviceName(const char *device_name);
+void BleAdvertiserMaintain();
+void LogMemoryStats(const char *stage);
 
 //================================ RFID ==================================
 Adafruit_PN532 nfc(PN532_SCK, PN532_MISO, PN532_MOSI, PN532_SS);

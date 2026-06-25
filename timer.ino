@@ -9,6 +9,7 @@ void TimerInit()
  */
 void TimerRun()
 {
+  BleAdvertiserMaintain();
   rfid_timer.run();
   nsec_tag_timer.run();
   wifi_timer.run();
