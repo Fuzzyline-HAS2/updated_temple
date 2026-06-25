@@ -8,8 +8,8 @@
  * @copyright Copyright (c) 2022
  */
 
-#define FIRMWARE_VER 16
-#define PARTITION_VER 1
+#define FIRMWARE_VER 17
+#define PARTITION_VER 2
 #include "updated_temple.h"
 
 //************************************************ Core1 ********************************************************************
