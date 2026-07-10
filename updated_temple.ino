@@ -9,7 +9,7 @@
  */
 
 #define FIRMWARE_VER 18
-#define PARTITION_VER 2
+#define PARTITION_VER 3
 #include "updated_temple.h"
 
 //************************************************ Core1 ********************************************************************
@@ -21,10 +21,7 @@ void TempleInit()
   // has2wifi.Setup("KT_GiGA_6C64", "ed46zx1198");                     j// 와이파이 세팅
   has2wifi.Setup("badland");
   LogMemoryStats("Wi-Fi connected");
-  if ((const char *)my["device_name"])                               // 부팅 시 현재 펌웨어 버전 서버로 전송
-  {
-    has2wifi.Send((String)(const char *)my["device_name"], "esp_version", String(FIRMWARE_VER));
-  }
+  TelnetInit();
   BleAdvertiserInit();
   ota.setLogStream(Serial);
   ota.setOnSuccess([]() {
@@ -64,6 +61,7 @@ void setup()
  */
 void loop()
 {
+  TelnetLoop();
   TimerRun();
   NeoFunc();
   if (activate_bool)
