@@ -13,6 +13,9 @@ void (*NeoFunc)() = NeoNo;
 HardwareSerial MySerial2(2); // Display
 
 //================================ Wifi ==================================
+void TelnetInit();
+void TelnetLoop();
+
 HAS2_Wifi has2wifi("http://172.30.1.43");
 
 SecureOTA ota(
