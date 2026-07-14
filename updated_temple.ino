@@ -8,7 +8,7 @@
  * @copyright Copyright (c) 2022
  */
 
-#define FIRMWARE_VER 20
+#define FIRMWARE_VER 21
 #define PARTITION_VER 3
 #include "updated_temple.h"
 
@@ -50,6 +50,7 @@ void setup()
 {
   delay(1000);
   Serial.begin(115200);
+  CrashReportInit();
   LogMemoryStats("boot");
   TempleInit();
   DataChange();
