@@ -8,7 +8,7 @@
  * @copyright Copyright (c) 2022
  */
 
-#define FIRMWARE_VER 21
+#define FIRMWARE_VER 22
 #define PARTITION_VER 3
 #include "updated_temple.h"
 
