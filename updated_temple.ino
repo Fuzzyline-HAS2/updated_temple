@@ -8,7 +8,7 @@
  * @copyright Copyright (c) 2022
  */
 
-#define FIRMWARE_VER 22
+#define FIRMWARE_VER 23
 #define PARTITION_VER 3
 #include "updated_temple.h"
 
@@ -18,6 +18,7 @@
  */
 void TempleInit()
 {
+  has2wifi.SetDebugPrint(&SerialMirror);  // 라이브러리 내부 로그도 Serial+Telnet 양쪽으로
   // has2wifi.Setup("KT_GiGA_6C64", "ed46zx1198");                     j// 와이파이 세팅
   has2wifi.Setup("badland");
   LogMemoryStats("Wi-Fi connected");
