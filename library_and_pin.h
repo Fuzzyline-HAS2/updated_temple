@@ -37,6 +37,7 @@
 #define PN532_MOSI                      (23)
 #define PN532_SS                        (5)
 
+#include "crash.h"
 #include "telnet.h"
 // Redirect Serial → TelnetSerial so all Serial.print/println also go to telnet
 #define Serial SerialMirror

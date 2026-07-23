@@ -54,11 +54,16 @@ void DataChange()
     static StaticJsonDocument<1000> cur;
 
     String cmd;
+    bool any_change = false;
 
     bool brightness_changed = ((int)my["brightness"] != (int)cur["brightness"]);
 
     if ((String)(const char *)my["game_state"] != (String)(const char *)cur["game_state"])
     {
+        Serial.println("[DataChange] game_state: " +
+            (String)(const char *)cur["game_state"] + " -> " +
+            (String)(const char *)my["game_state"]);
+        any_change = true;
         if ((String)(const char *)my["game_state"] == "setting")
         {
             if (brightness_changed) applyBrightness();
@@ -80,8 +85,19 @@ void DataChange()
         applyBrightness();
     }
 
+    if (brightness_changed)
+    {
+        Serial.println("[DataChange] brightness: " +
+            String((int)cur["brightness"]) + " -> " + String((int)my["brightness"]));
+        any_change = true;
+    }
+
     if ((String)(const char *)my["device_state"] != (String)(const char *)cur["device_state"])
     {
+        Serial.println("[DataChange] device_state: " +
+            (String)(const char *)cur["device_state"] + " -> " +
+            (String)(const char *)my["device_state"]);
+        any_change = true;
         if ((String)(const char *)my["device_state"] == "activate")
         {
             sendCommand("page pgChipCount");
@@ -90,12 +106,12 @@ void DataChange()
         else if ((String)(const char *)my["device_state"] == "player_win")
         {
             sendCommand("page pgTaggerLose");
-            NeoFunc = NeoLose;
+            //NeoFunc = NeoLose;
         }
         else if ((String)(const char *)my["device_state"] == "player_lose")
         {
             sendCommand("page pgTaggerWin");
-            NeoFunc = NeoWin;
+            //NeoFunc = NeoWin;
         }
         else if ((String)(const char *)my["device_state"] == "blink")
         {
@@ -111,16 +127,24 @@ void DataChange()
 
     if((int)my["taken_chip"] != (int)cur["taken_chip"])
     {
+        Serial.println("[DataChange] taken_chip: " +
+            String((int)cur["taken_chip"]) + " -> " + String((int)my["taken_chip"]));
+        any_change = true;
         cmd = "pgChipCount.vSacrificeChip.val=" + (String)(int)my["taken_chip"];
         sendCommand(cmd.c_str());
     }
     if((int)my["max_chip"] != (int)cur["max_chip"])
     {
+        Serial.println("[DataChange] max_chip: " +
+            String((int)cur["max_chip"]) + " -> " + String((int)my["max_chip"]));
+        any_change = true;
         cmd = "pgChipCount.vMaxChip.val=" + (String)(int)my["max_chip"];
         sendCommand(cmd.c_str());
     }
     SyncLanguage();
 
-    Serial.println("Data Change");
+    if (any_change)
+        Serial.println("[DataChange] applied");
+
     cur = my;
 }

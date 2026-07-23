@@ -49,14 +49,18 @@ void RfidLoop()
   char user_data[5];
   byte pn532_packetbuffer11[64];
   pn532_packetbuffer11[0] = 0x00;
+  BREADCRUMB("RfidLoop:sendCmd");
   if (nfc.sendCommandCheckAck(pn532_packetbuffer11, 1))
   { // rfid 통신 가능한 상태인지 확인
+    BREADCRUMB("RfidLoop:detectTarget");
     if (nfc.startPassiveTargetIDDetection(PN532_MIFARE_ISO14443A))
     {                                    // rfid에 tag 찍혔는지 확인용 //데이터 들어오면 uid정보 가져오기
+      BREADCRUMB("RfidLoop:readPage");
       if (nfc.ntag2xx_ReadPage(7, data)) // ntag 데이터에 접근해서 불러와서 data행열에 저장
         CardChecking(data);
     }
   }
+  BREADCRUMB("RfidLoop:done");
 }
 
 /**
@@ -66,6 +70,7 @@ void RfidLoop()
  */
 void CardChecking(uint8_t rfidData[32]) // 어떤 카드가 들어왔는지 확인용
 {
+  BREADCRUMB("CardChecking:recv");
   String tagUser = "";
   static String cur_tag_user = "";
   for (int i = 0; i < 4; i++) // GxPx 데이터만 배열에서 추출해서 string으로 저장
@@ -96,6 +101,7 @@ void CardChecking(uint8_t rfidData[32]) // 어떤 카드가 들어왔는지 확�
     lightColor(pixels_side, purple);
     lightColor(pixels_square, purple);
 
+    BREADCRUMB("CardChecking:taggerSend");
     has2wifi.Send((String)(const char *)my["device_name"], "device_state", "activate");
     has2wifi.Send((String)(const char *)tag["device_name"], "device_state", "activate");
 
@@ -128,6 +134,7 @@ void CardChecking(uint8_t rfidData[32]) // 어떤 카드가 들어왔는지 확�
       delay(50);
     }
 
+    BREADCRUMB("CardChecking:chipSend");
     has2wifi.Send((String)(const char *)my["device_name"], "taken_chip", "+1");
     has2wifi.Send((String)(const char *)tag["device_name"], "taken_chip", "-1");
     has2wifi.Send((String)(const char *)tag["device_name"], "exp", "+100");

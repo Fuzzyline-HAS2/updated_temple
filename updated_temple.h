@@ -32,6 +32,8 @@ void SettingFunc();
 void ReadyFunc();
 void ActionFunc();
 void DataChange();
+void CrashReportInit();
+void CrashReportSend(const char *device_name);
 
 //=============================== Display ================================
 int nextion_language = 1;  // 0=EN, 1=KO (기본값 KO)

@@ -10,6 +10,17 @@ class TelnetSerial : public Stream {
     WiFiServer     _server;
     WiFiClient     _client;
 
+    static const int LOG_LINES    = 25;
+    static const int LOG_LINE_LEN = 128;
+
+    char _log_lines[LOG_LINES][LOG_LINE_LEN] = {};
+    int  _log_head    = 0;   // 가장 오래된 줄 인덱스
+    int  _log_count   = 0;   // 저장된 줄 수
+    char _log_cur[LOG_LINE_LEN] = {};
+    int  _log_cur_pos = 0;
+
+    void _logByte(uint8_t c);
+
 public:
     TelnetSerial() : _uart(0), _server(23) {}
 

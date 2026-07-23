@@ -2,6 +2,13 @@
 
 void TimerInit()
 {
+  static const esp_task_wdt_config_t wdt_cfg = {
+    .timeout_ms    = 30000,
+    .idle_core_mask = 0,
+    .trigger_panic  = true,
+  };
+  esp_task_wdt_reconfigure(&wdt_cfg);  // 이미 초기화된 WDT 설정만 변경
+  esp_task_wdt_add(NULL);              // 현재 태스크(loop) 등록
   wifi_timer_id = wifi_timer.setInterval(2000, WifiTimerFunc);
 }
 /**
@@ -9,6 +16,8 @@ void TimerInit()
  */
 void TimerRun()
 {
+  esp_task_wdt_reset();
+  g_loop_count++;
   BleAdvertiserMaintain();
   rfid_timer.run();
   nsec_tag_timer.run();
@@ -25,7 +34,10 @@ void RfidTagTimerFunc()
 
 void WifiTimerFunc()
 {
+  BREADCRUMB("WifiTimerFunc");
   has2wifi.Loop(DataChange);
+  CrashReportSend((const char *)my["device_name"]);
+  CrashNvsFlush();
 }
 
 void NsecTagTimerFailFunc()
