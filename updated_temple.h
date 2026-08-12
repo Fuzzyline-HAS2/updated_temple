@@ -75,10 +75,6 @@ Adafruit_NeoPixel pixels_square(NUMPIXELS_SQUARE, NEOPIXEL_PIN_SQUARE, NEO_GRB +
 Adafruit_NeoPixel pixels_round(NUMPIXELS_ROUND, NEOPIXEL_PIN_ROUND, NEO_GRB + NEO_KHZ800);
 Adafruit_NeoPixel pixels_side(NUMPIXELS_SIDE, NEOPIXEL_PIN_SIDE, NEO_GRB + NEO_KHZ800);
 
-int arrow_neo_line_1;
-int arrow_neo_line_2;
-int arrow_neo_line_3;
-
 // Neopixel 색상정보
 int black[3] = {0, 0, 0};
 int white[3] = {20, 20, 20};
@@ -100,8 +96,6 @@ void NeoGaming();
 void NeoTakenChip();
 void NeoWin();
 void NeoLose();
-void NeoArrow();
-void NeoArrowSet(int arrow_neo_line_num, int arrow_neo_line);
 
 //================================ Timer =================================
 // 1초마다 RFID 가 인식되게 타이머 설정

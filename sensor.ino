@@ -218,46 +218,17 @@ void NeoNo()
 void NeoBeforeTagger()
 {
   delay(100);
-  static int breathe = 0;
-  static bool breathe_direction = true;
-
-  breathe_direction ? breathe++ : breathe--;
 
   lightColor(pixels_round, white);
-  lightRgb(pixels_side, breathe, breathe, breathe);
   lightColor(pixels_square, red);
-
-  if (breathe == 0)
-  {
-    breathe_direction = true;
-  }
-  else if (breathe == 20)
-  {
-    breathe_direction = false;
-  }
 }
 
 void NeoTagger()
 {
   delay(100);
-  static int breathe_2 = 0;
-  static bool breathe_direction_2 = true;
-
-  breathe_direction_2 ? breathe_2++ : breathe_2--;
-
-  lightRgb(pixels_side, breathe_2, breathe_2, breathe_2);
-
-  if (breathe_2 == 0)
-  {
-    breathe_direction_2 = true;
-  }
-  else if (breathe_2 == 20)
-  {
-    breathe_direction_2 = false;
-  }
 
   pixels_round.clear();
-  NeoArrow();
+  lightColor(pixels_square, white);
 }
 
 void NeoTaggerTag()
@@ -281,44 +252,17 @@ void NeoTaggerTag()
 
 void NeoAfterTagger()
 {
-  static bool after_tagger_neo_bool = false;
-
-  if (after_tagger_neo_bool)
-  {
-    after_tagger_neo_bool = false;
-    pixels_round.clear();
-    pixels_side.clear();
-    pixels_square.clear();
-  }
-  else
-  {
-    after_tagger_neo_bool = true;
-    lightColor(pixels_round, purple);
-    lightColor(pixels_side, purple);
-    lightColor(pixels_square, purple);
-  }
+  lightColor(pixels_round, purple);
+  // lightColor(pixels_side, purple);
+  lightColor(pixels_square, purple);
 }
 
 void NeoGaming()
 {
   delay(100);
-  static int breathe = 0;
-  static bool breathe_direction = true;
 
-  breathe_direction ? breathe++ : breathe--;
-
-  lightRgb(pixels_round, breathe, 0, breathe);
-  lightRgb(pixels_side, breathe, 0, breathe);
-  NeoArrow();
-
-  if (breathe == 0)
-  {
-    breathe_direction = true;
-  }
-  else if (breathe == 20)
-  {
-    breathe_direction = false;
-  }
+  lightColor(pixels_round, white);
+  lightColor(pixels_square, white);
 }
 
 // void NeoTakenChip()
@@ -409,144 +353,4 @@ void NeoLose()
     NeoFunc = NeoNo;
   }
   delay(lose_neo_delay);
-}
-
-void NeoArrow()
-{
-  static int arrow_pattern = 0;
-
-  switch (arrow_pattern)
-  {
-  case 0:
-    pixels_square.clear();
-    break;
-
-  case 1:
-    arrow_neo_line_1 = 0;
-    arrow_neo_line_2 = 16;
-    arrow_neo_line_3 = 0;
-    break;
-
-  case 2:
-    arrow_neo_line_1 = 1;
-    arrow_neo_line_2 = 24;
-    arrow_neo_line_3 = 1;
-    break;
-
-  case 3:
-    arrow_neo_line_1 = 3;
-    arrow_neo_line_2 = 12;
-    arrow_neo_line_3 = 3;
-    break;
-
-  case 4:
-    arrow_neo_line_1 = 6;
-    arrow_neo_line_2 = 6;
-    arrow_neo_line_3 = 6;
-    break;
-
-  case 5:
-    arrow_neo_line_1 = 12;
-    arrow_neo_line_2 = 3;
-    arrow_neo_line_3 = 12;
-    break;
-
-  case 6:
-    arrow_neo_line_1 = 24;
-    arrow_neo_line_2 = 1;
-    arrow_neo_line_3 = 24;
-    break;
-
-  case 7:
-    arrow_neo_line_1 = 16;
-    arrow_neo_line_2 = 0;
-    arrow_neo_line_3 = 16;
-    break;
-
-  default:
-    break;
-  }
-
-  if (++arrow_pattern > 7)
-  {
-    arrow_pattern = 0;
-  }
-
-  NeoArrowSet(1, arrow_neo_line_1);
-  // NeoArrowSet(2, arrow_neo_line_2);
-  NeoArrowSet(3, arrow_neo_line_3);
-  pixels_square.show();
-}
-
-void NeoArrowSet(int arrow_neo_line_num, int arrow_neo_line)
-{
-  int neo_num = 0;
-
-  if (arrow_neo_line_num == 1)
-  {
-    neo_num = 0;
-  }
-  else if (arrow_neo_line_num == 2)
-  {
-    neo_num = 5;
-  }
-  else if (arrow_neo_line_num == 3)
-  {
-    neo_num = 10;
-  }
-
-  switch (arrow_neo_line)
-  {
-  case 0:
-    pixels_square.setPixelColor(neo_num + 1, 0, 0, 0);
-    pixels_square.setPixelColor(neo_num + 2, 0, 0, 0);
-    pixels_square.setPixelColor(neo_num + 3, 0, 0, 0);
-    pixels_square.setPixelColor(neo_num + 4, 0, 0, 0);
-    pixels_square.setPixelColor(neo_num + 5, 0, 0, 0);
-    break;
-  case 1:
-    pixels_square.setPixelColor(neo_num + 1, 0, 0, 0);
-    pixels_square.setPixelColor(neo_num + 2, 0, 0, 0);
-    pixels_square.setPixelColor(neo_num + 3, 0, 0, 0);
-    pixels_square.setPixelColor(neo_num + 4, 0, 0, 0);
-    pixels_square.setPixelColor(neo_num + 5, 20, 20, 20);
-    break;
-  case 3:
-    pixels_square.setPixelColor(neo_num + 1, 0, 0, 0);
-    pixels_square.setPixelColor(neo_num + 2, 0, 0, 0);
-    pixels_square.setPixelColor(neo_num + 3, 0, 0, 0);
-    pixels_square.setPixelColor(neo_num + 4, 20, 20, 20);
-    pixels_square.setPixelColor(neo_num + 5, 20, 20, 20);
-    break;
-  case 6:
-    pixels_square.setPixelColor(neo_num + 1, 0, 0, 0);
-    pixels_square.setPixelColor(neo_num + 2, 0, 0, 0);
-    pixels_square.setPixelColor(neo_num + 3, 20, 20, 20);
-    pixels_square.setPixelColor(neo_num + 4, 20, 20, 20);
-    pixels_square.setPixelColor(neo_num + 5, 0, 0, 0);
-    break;
-  case 12:
-    pixels_square.setPixelColor(neo_num + 1, 0, 0, 0);
-    pixels_square.setPixelColor(neo_num + 2, 20, 20, 20);
-    pixels_square.setPixelColor(neo_num + 3, 20, 20, 20);
-    pixels_square.setPixelColor(neo_num + 4, 0, 0, 0);
-    pixels_square.setPixelColor(neo_num + 5, 0, 0, 0);
-    break;
-  case 24:
-    pixels_square.setPixelColor(neo_num + 1, 20, 20, 20);
-    pixels_square.setPixelColor(neo_num + 2, 20, 20, 20);
-    pixels_square.setPixelColor(neo_num + 3, 0, 0, 0);
-    pixels_square.setPixelColor(neo_num + 4, 0, 0, 0);
-    pixels_square.setPixelColor(neo_num + 5, 0, 0, 0);
-    break;
-  case 16:
-    pixels_square.setPixelColor(neo_num + 1, 20, 20, 20);
-    pixels_square.setPixelColor(neo_num + 2, 0, 0, 0);
-    pixels_square.setPixelColor(neo_num + 3, 0, 0, 0);
-    pixels_square.setPixelColor(neo_num + 4, 0, 0, 0);
-    pixels_square.setPixelColor(neo_num + 5, 0, 0, 0);
-    break;
-  default:
-    break;
-  }
 }
